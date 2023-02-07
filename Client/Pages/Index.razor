@@ -1,0 +1,28 @@
+﻿@page "/"
+
+<PageTitle>
+
+</PageTitle>
+
+<h2><strong>BirdEyes: </strong>Welcome to all of your game purchasing solutions! </h2>
+
+
+
+<div>
+    <AuthorizeView>
+        <Authorized>
+            <p>
+                <h5>Welcome back! </h5> <!--Need to add tracking reminders on Authorized View of home page, otherwise remember to fill the negative space with something else --> 
+            </p>
+        </Authorized>
+        <NotAuthorized>
+            <p>
+                <h5>BirdEyes is a tool allowing gamers to track popular videogames, courtesy of the IGDB API and the Kamran Ayub's .NET wrapper (Both open-source). It also happens to be an IB student's ITGS IA, so expect nothing. </h5>
+            </p>
+            <p>
+                <h5>You may browse without logging in, but the purpose of the app is to allow for the tracking of applications for when they drop below a set price, for example during sales. </h5>
+            </p>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+

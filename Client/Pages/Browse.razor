@@ -1,0 +1,114 @@
+﻿@page "/browse"
+@using BirdEyes.Client.Services.AppService
+@inject IAppService AppService
+
+<PageTitle> Apps </PageTitle>
+
+<strong><h3>Browse Games</h3></strong>
+<p/><p/>
+<AuthorizeView>
+	<NotAuthorized>
+		<p>Login to track games! </p>
+	</NotAuthorized>
+</AuthorizeView>
+<EditForm Model="@BrowseInput">
+	<div>
+		<InputText id="Searchbar" @bind-Value="@BrowseInput.InputtedText" class="form-control" />
+	</div>
+</EditForm>
+
+<table class="table"> 
+	<thead>
+		<tr>
+			<th>Title</th>
+			<th>Price</th>
+			<th>On Sale?</th>
+			<th>Version</th>
+			<th>Rating</th>
+			<th>Publisher</th>
+			<th>Developer</th>
+			<th>Download Count</th>
+			<th class="dropdown"><button class="dropdown">
+				<span class="oi oi-list" area-hidden="true"/>
+				<div class="dropdown-content">
+						<a href="&sort=Title"<!--add this stuff-->>Title</a>
+						<a href="#">Link 2</a>
+						<a href="#">Link 3</a>
+				</div>
+
+			</button></th>
+		</tr>
+	</thead>
+	<tbody>
+		
+		@foreach (Application app in AppService.AllMockApps)
+			if (app.PubName!= null && app.DevName!=null && (app.PubName.Contains(BrowseInput.InputtedText) | app.DevName.Contains(BrowseInput.InputtedText)))
+		{
+			<tr>
+				<td>@app.Title</td> <!--Make this a link--> 
+
+				@if (app.Price == 0 | app.Price==null)  {
+					<td>Free</td>
+				}
+				else {
+					<td>$@app.Price</td>
+				} 
+
+				<td>@app.OnSale</td>
+				
+				<td>@app.Version</td>
+				
+				<td>@app.Rating</td>
+				
+				<td>@app.PubName</td> <!--Make this a link-->
+				
+				<td>@app.DevName</td> <!--Make this a link-->
+				
+				<td>@app.Downloads</td>
+			</tr>
+		}
+			else if (app.Title.Contains(BrowseInput.InputtedText))
+			{
+				<tr>
+					<td>@app.Title</td> <!--Make this a link-->
+					@if (app.Price == 0 | app.Price == null)
+					{
+						<td>Free</td>
+					}
+					else
+					{
+						<td>$@app.Price</td>
+					}
+
+					<td>@app.OnSale</td>
+
+					<td>@app.Version</td>
+
+					<td>@app.Rating</td>
+
+					<td>@app.PubName</td> <!--Make this a link-->
+
+					<td>@app.DevName</td> <!--Make this a link-->
+
+					<td>@app.Downloads</td>
+				</tr>
+			}
+	</tbody>
+</table>
+
+
+
+@code {
+	private Input BrowseInput = new Input(); 
+
+	protected override async Task OnInitializedAsync()
+	{
+		await AppService.GetApps();
+		
+	}
+
+
+	public void DropSortOptions()  {
+
+	}
+}
