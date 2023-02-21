@@ -8,7 +8,7 @@
 <p/><p/>
 <AuthorizeView>
 	<NotAuthorized>
-		<p>Login to track games! </p>
+		<p>Log in to track games! </p>
 	</NotAuthorized>
 </AuthorizeView>
 <EditForm Model="@BrowseInput">
@@ -31,7 +31,7 @@
 			<th class="dropdown"><button class="dropdown">
 				<span class="oi oi-list" area-hidden="true"/>
 				<div class="dropdown-content">
-						<a href="&sort=Title"<!--add this stuff-->>Title</a>
+						<a href="/browse&sort=Title"<!--add this stuff-->>Title</a>
 						<a href="#">Link 2</a>
 						<a href="#">Link 3</a>
 				</div>
@@ -47,7 +47,7 @@
 			<tr>
 				<td>@app.Title</td> <!--Make this a link--> 
 
-				@if (app.Price == 0 | app.Price==null)  {
+				@if (app.Price == 0)  {
 					<td>Free</td>
 				}
 				else {
@@ -71,7 +71,7 @@
 			{
 				<tr>
 					<td>@app.Title</td> <!--Make this a link-->
-					@if (app.Price == 0 | app.Price == null)
+					@if (app.Price == 0)
 					{
 						<td>Free</td>
 					}

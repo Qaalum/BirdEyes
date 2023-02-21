@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BirdEyes.Shared
 {
-	 public class Input
+	 public class Input //Unnecessary 
 	{
 		public string InputtedText { get; set; } = string.Empty;
 		public int? InputtedNumber { get; set; } = null;
