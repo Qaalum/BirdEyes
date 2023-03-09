@@ -14,6 +14,7 @@ namespace BirdEyes.Server.Controllers
         IGDBClient igdb = new IGDBClient("ooyem18exvjha2nkwwfrwhbei8nv0c", "b6qyv98cyvtz50nhizwip2zfmgxt7y");
         
 
+
         [HttpGet]
         public async Task<IActionResult> GetAllGames()
         {
