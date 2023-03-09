@@ -1,10 +1,10 @@
 ﻿@page "/browse"
-@using BirdEyes.Client.Services.AppService
-@inject IAppService AppService
+@using BirdEyes.Client.Services.IGDBService;
+@inject IIGDBService IGDBService
 @using IGDB;
 @using IGDB.Models;
 
-<PageTitle> Apps </PageTitle>
+<PageTitle> Browse Games! </PageTitle>
 
 <strong><h3>Browse Games</h3></strong>
 <p/><p/>
@@ -43,57 +43,34 @@
 	</thead>
 	<tbody>
 		
-		@foreach (Application app in AppService.AllMockApps)
-			if (app.PubName!= null && app.DevName!=null && (app.PubName.Contains(BrowseInput.InputtedText) | app.DevName.Contains(BrowseInput.InputtedText)))
+		@foreach (Game game in IGDBService.AllGames)
+			if (GOGService.AllGames.Contains() | SteamService.AllGames.Contains())
 		{
 			<tr>
-				<td>@app.Title</td> <!--Make this a link--> 
-
-				@if (app.Price == 0)  {
+					<td>game.Name</td> <!--Make this a link-->
+					@if ( == 0)
+					{
 					<td>Free</td>
 				}
 				else {
-					<td>$@app.Price</td>
+					<td>$Price</td>
 				} 
 
-				<td>@app.OnSale</td>
+				<td>OnSale</td>
 				
-				<td>@app.Version</td>
+				<td>Version</td>
 				
-				<td>@app.Rating</td>
+				<td>Rating</td>
 				
-				<td>@app.PubName</td> <!--Make this a link-->
+				<td>PubName</td> <!--Make this a link-->
 				
-				<td>@app.DevName</td> <!--Make this a link-->
+				<td>DevName</td> <!--Make this a link-->
 				
-				<td>@app.Downloads</td>
+				<td>Downloads</td>
 			</tr>
 		}
-			else if (app.Title.Contains(BrowseInput.InputtedText))
+			else if ()
 			{
-				<tr>
-					<td>@app.Title</td> <!--Make this a link-->
-					@if (app.Price == 0)
-					{
-						<td>Free</td>
-					}
-					else
-					{
-						<td>$@app.Price</td>
-					}
-
-					<td>@app.OnSale</td>
-
-					<td>@app.Version</td>
-
-					<td>@app.Rating</td>
-
-					<td>@app.PubName</td> <!--Make this a link-->
-
-					<td>@app.DevName</td> <!--Make this a link-->
-
-					<td>@app.Downloads</td>
-				</tr>
 			}
 	</tbody>
 </table>
@@ -105,15 +82,11 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await AppService.GetApps();
+		await IGDBService.GetAllGames();
 		
 	}
 
 
-	public void DropSortOptions()  {
-
-	}
-
-	//List<Game> games = await igdb.QueryAsync<Game>(IGDBClient.Endpoints.Games, query: "fields id,name; where id = 4;");
-
+	//public void DropSortOptions()  {	}
 }
+

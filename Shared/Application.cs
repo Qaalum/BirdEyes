@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace BirdEyes.Shared
+namespace BirdEyes.Shared //WHOLE THINK IS PROBABLY UNNECESSARY, KEEPING JUST IN CASE 
 {
     public class Application //Add in-app purchases var 
     {
