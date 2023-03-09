@@ -2,7 +2,7 @@
 
 namespace BirdEyes.Client.Services.SteamService
 {
-	public class SteamService
+	public class SteamService : ISteamService
 	{
 		private readonly HttpClient _http;
 

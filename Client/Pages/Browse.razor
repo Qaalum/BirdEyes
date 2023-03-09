@@ -1,6 +1,10 @@
 ﻿@page "/browse"
 @using BirdEyes.Client.Services.IGDBService;
 @inject IIGDBService IGDBService
+@using BirdEyes.Client.Services.SteamService;
+@inject ISteamService SteamService
+@using BirdEyes.Client.Services.GOGService;
+@inject IGOGService GOGService
 @using IGDB;
 @using IGDB.Models;
 
@@ -42,15 +46,14 @@
 		</tr>
 	</thead>
 	<tbody>
-		
-		@foreach (Game game in IGDBService.AllGames)
+		<!-- @foreach (Game game in IGDBService.AllGames)
 			if (GOGService.AllGames.Contains() | SteamService.AllGames.Contains())
 		{
 			<tr>
-					<td>game.Name</td> <!--Make this a link-->
+					<td>game.Name</td> 
 					@if ( == 0)
 					{
-					<td>Free</td>
+					<td style="00FF00">Free</td>
 				}
 				else {
 					<td>$Price</td>
@@ -62,17 +65,17 @@
 				
 				<td>Rating</td>
 				
-				<td>PubName</td> <!--Make this a link-->
+				<td>PubName</td> 
 				
-				<td>DevName</td> <!--Make this a link-->
+				<td>DevName</td> 
 				
 				<td>Downloads</td>
 			</tr>
 		}
 			else if ()
 			{
-			}
-	</tbody>
+		}-->
+		</tbody> 
 </table>
 
 

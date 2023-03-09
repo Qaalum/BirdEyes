@@ -2,7 +2,7 @@
 
 namespace BirdEyes.Client.Services.GOGService
 {
-	public class GOGService
+	public class GOGService : IGOGService
 	{
 		private readonly HttpClient _http;
 
