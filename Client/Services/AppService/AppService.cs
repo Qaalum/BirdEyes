@@ -45,7 +45,7 @@ namespace BirdEyes.Client.Services.AppService
 
         public Task<Publisher> GetMockPublisher(string PubName)
         {
-            /*            var pub = AllMockPublishers.FirstOrDefault(pubs => pubs.Name == PubName);
+            /*            var pub = AllPublishers.FirstOrDefault(pubs => pubs.Name == PubName);
                         if (pub != null)
                             return pub;
                         else

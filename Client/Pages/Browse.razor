@@ -1,6 +1,8 @@
 ﻿@page "/browse"
 @using BirdEyes.Client.Services.AppService
 @inject IAppService AppService
+@using IGDB;
+@using IGDB.Models;
 
 <PageTitle> Apps </PageTitle>
 
@@ -111,4 +113,12 @@
 	public void DropSortOptions()  {
 
 	}
+
+	IGDBClient igdb = new IGDBClient(
+			Environment.GetEnvironmentVariable("IGDB_CLIENT_ID"),
+			Environment.GetEnvironmentVariable("IGDB_CLIENT_SECRET")
+	);
+
+	//List<Game> games = await igdb.QueryAsync<Game>(IGDBClient.Endpoints.Games, query: "fields id,name; where id = 4;");
+
 }
