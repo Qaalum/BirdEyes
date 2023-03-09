@@ -11,32 +11,22 @@ namespace BirdEyes.Server.Controllers
     [ApiController]
     public class IGDBController : ControllerBase
     {
-        IGDBClient igdb = new IGDBClient(
-        Environment.GetEnvironmentVariable("ooyem18exvjha2nkwwfrwhbei8nv0c"),
-        Environment.GetEnvironmentVariable("b6qyv98cyvtz50nhizwip2zfmgxt7y")
-        );
-
+        IGDBClient igdb = new IGDBClient("ooyem18exvjha2nkwwfrwhbei8nv0c", "b6qyv98cyvtz50nhizwip2zfmgxt7y");
+        
 
         [HttpGet]
-        public async Task<IActionResult> ListAllApps()
+        public async Task<IActionResult> GetAllGames()
         {
-            var AllGames = await igdb.QueryAsync<Game>(IGDBClient.Endpoints.Games, query: "fields id,name,; where id > 0;");
+            var AllGames = await igdb.QueryAsync<Game>(IGDBClient.Endpoints.Games, query: "fields id,name;");
             return Ok(AllGames);
-        }    
-
-        /*public async Task<IActionResult> GetApps()
-        {
-            return Ok(AllApps);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetApp(int id)
-        {
-            var app = AllApps.FirstOrDefault(apps => apps.Id == id);
-            if (app == null) return NotFound("40404040404040404040404");
-            return Ok(app);
-        }*/
-    
-    }
+		public async Task<IActionResult> GetGame()
+		{
+			var AllGames = await igdb.QueryAsync<Game>(IGDBClient.Endpoints.Games, query: "fields id,name; where id = {id};");
+			return Ok(AllGames);
+		}
+	}
 }
 

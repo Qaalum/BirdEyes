@@ -16,30 +16,13 @@ namespace BirdEyes.Client.Services.IGDBService
             _http = http;
         }
 
-        public List<Application> AllApps { get; set; } = new List<Application>();
-        public List<Publisher> AllPublishers { get; set; } = new List<Publisher>();
-        public List<Developer> AllDevelopers { get; set; } = new List<Developer>();
+        public List<Application> AllGames { get; set; } = new List<Application>();
 
-        IGDBClient igdbClient = new IGDBClient(
-        Environment.GetEnvironmentVariable("IGDB_CLIENT_ID"),
-        Environment.GetEnvironmentVariable("IGDB_CLIENT_SECRET")
-);
-
-        public async Task GetApps()
+        public async Task GetAllGames()
         {
-            var result = await _http.GetFromJsonAsync<List<Application>>("api/app");
+            var result = await _http.GetFromJsonAsync<List<Application>>("api/igdb");
             if (result != null)
-                AllApps = result;
-        }
-
-        public Task GetDevelopers()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task GetPublishers()
-        {
-            throw new NotImplementedException();
+                AllGames = result;
         }
     }
 }
