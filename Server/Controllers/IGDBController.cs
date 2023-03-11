@@ -11,22 +11,21 @@ namespace BirdEyes.Server.Controllers
     [ApiController]
     public class IGDBController : ControllerBase
     {
-        IGDBClient igdb = new IGDBClient("ooyem18exvjha2nkwwfrwhbei8nv0c", "b6qyv98cyvtz50nhizwip2zfmgxt7y");
+        IGDBClient igdbClient = new IGDBClient("ooyem18exvjha2nkwwfrwhbei8nv0c", "b6qyv98cyvtz50nhizwip2zfmgxt7y"); //Secret shoudl stay private 
         
-
 
         [HttpGet]
         public async Task<IActionResult> GetAllGames()
         {
-            var AllGames = await igdb.QueryAsync<Game>(IGDBClient.Endpoints.Games, query: "fields id,name;");
-            return Ok(AllGames);
+            var AllIGDBGames = await igdbClient.QueryAsync<Game>(IGDBClient.Endpoints.Games, query: "fields id,name;");
+            return Ok(AllIGDBGames);
         }
 
         [HttpGet("{id}")]
 		public async Task<IActionResult> GetGame()
 		{
-			var AllGames = await igdb.QueryAsync<Game>(IGDBClient.Endpoints.Games, query: "fields id,name; where id = {id};");
-			return Ok(AllGames);
+			var IGDBGame = await igdbClient.QueryAsync<Game>(IGDBClient.Endpoints.Games, query: "fields id,name; where id = {id};");
+			return Ok(IGDBGame);
 		}
 	}
 }
