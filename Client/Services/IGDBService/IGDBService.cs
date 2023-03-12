@@ -1,13 +1,8 @@
-﻿using System.Net.Http; // for HttpClient
-using System.Net.Http; // for HttpClient
-using System.Net.Http.Json; // for HttpClientJsonExtensions
-using IGDB;
-using IGDB.Models;
-
+﻿using System.Net.Http.Json; // for HttpClientJsonExtensions
 
 namespace BirdEyes.Client.Services.IGDBService
 {
-    public class IGDBService : BirdEyes.Client.Services.IGDBService.IIGDBService
+    public class IGDBService : IIGDBService
     {
         private readonly HttpClient _http;
 

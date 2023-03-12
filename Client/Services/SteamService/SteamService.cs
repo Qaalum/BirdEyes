@@ -15,7 +15,7 @@ namespace BirdEyes.Client.Services.SteamService
 
 		public async Task GetAllGames()
 		{
-			var result = await _http.GetFromJsonAsync<List<Application>>("api/igdb"); // Get from "https://api.Steam.com/api/products" 
+			var result = await _http.GetFromJsonAsync<List<Application>>("api/steam"); 
 			if (result != null)
 				AllGames = result;
 		}
