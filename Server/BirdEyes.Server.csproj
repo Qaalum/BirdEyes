@@ -11,6 +11,8 @@
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="IGDB" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.8" />
+    <PackageReference Include="NicoVIII.GogApi" Version="4.0.0" />
+    <PackageReference Include="RestSharp" Version="109.0.1" />
     <PackageReference Include="SteamWebAPI2" Version="4.4.0" />
   </ItemGroup>
 
