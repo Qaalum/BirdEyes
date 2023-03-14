@@ -18,12 +18,12 @@ namespace BirdEyes.Server.Controllers
 			return Ok(allIGDBGames);
 		}
 
-		[HttpGet("{id}")]
+		/*[HttpGet("{id}")]
 		public async Task<IActionResult> GetGame()
 		{
 			var IGDBGame = await igdbClient.QueryAsync<Game>(IGDBClient.Endpoints.Games, query: "fields id,name; where id = {id};");
 			return Ok(IGDBGame);
-		}
+		}*/
 	}
 }
 
