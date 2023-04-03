@@ -23,9 +23,9 @@ namespace BirdEyes.Server.Controllers
 			foreach (string str in resultantStrings)
 			{
 				if (str.Contains("data"))
-					str.Remove(4+shop.Length);
+					str.Remove(0, 4+shop.Length);
 				else
-					str.Remove(3);
+					str.Remove(0, 3);
 			}
 
 			return resultantStrings;
@@ -40,20 +40,29 @@ namespace BirdEyes.Server.Controllers
 			foreach (var shop in (Shop[])Enum.GetValues(typeof(Shop)))
 			{
 				RestRequest shopGameRequest = new RestRequest("plain/list/?key="+ITADKey+"&shop="+shop, Method.Get);
-				var shopGameResponse = await restClient.GetAsync(shopGameRequest); // await at the beginning or .Result at the end? I'm not sure. 
+				var shopGameResponse = restClient.ExecuteAsync(shopGameRequest).Result;
+
+
+				List<string> shopGames = new List<string>();
 
 				//All games' titles
-				List<string> shopGames = TrimGameResponse(shopGameResponse.Content, shop.ToString());
+				if (shopGameResponse.Content != null)
+					shopGames.AddRange(TrimGameResponse(shopGameResponse.Content, shop.ToString()));
+				else
+				{
+					return BadRequest("shopGameResponse.Content is null");
+					throw new Exception();
+				}
 
 
 				foreach (var game in shopGames)
 				{
 					RestRequest shopPriceRequest = new RestRequest("prices/?key="+ITADKey+"&plains="+game+"&shops="+shop);
-					var shopPriceResponse = await restClient.GetAsync(shopPriceRequest);
+					var shopPriceResponse = restClient.ExecuteAsync(shopPriceRequest).Result;
 
-					//One games' price
+					//One game's price
 					double shopGamePrice = new double();
-					shopPriceResponse.Content.Remove(shopPriceResponse.Content.IndexOf("\"price_new\":")+12);
+					shopPriceResponse.Content.Remove(0, shopPriceResponse.Content.IndexOf("\"price_new\":")+12);
 					shopGamePrice = Double.Parse((string)shopPriceResponse.Content.TakeWhile(Char.IsDigit));
 
 					for (int i = 0; i < shopGames.Count; i++)
