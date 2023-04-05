@@ -24,12 +24,39 @@ namespace BirdEyes.Server.Controllers
 			{
 				if (str.Contains("data"))
 					str.Remove(0, 4+shop.Length);
-				else
+				else if (str.Length>2)
+				{
+					Console.WriteLine(str);
 					str.Remove(0, 3);
+				}
+				else
+				{
+					str.Remove(0, str.Length);
+				}
 			}
 
 			return resultantStrings;
 		}
+		static double trimPriceResponse(string trimString)
+		{
+			if (trimString.Length == 0)
+			{
+				throw new ArgumentException("The priceResponse inludes no numbers 😐");
+			}
+
+			double resultantDouble = new double();
+			if (trimString.TakeWhile(Char.IsDigit).ToString().Length == 0)
+			{
+				trimString.Remove(0, 1);
+				trimPriceResponse(trimString);
+			}
+			else
+			{
+				resultantDouble = Double.Parse(String.Join("", Convert.ToChar(trimString.TakeWhile(Char.IsDigit)))); //Don't ask
+			}
+			return resultantDouble;
+		}
+
 
 		enum Shop { steam, gog, greenmangaming, indiegamestand, amazonus, humblestore, nuuvem, getgames, desura, indiegalastore, gamefly, origin, epic, fanatical, shinyloot, voidu, itchio, gamersgate, noctre, gamebillet, gamesplanetus, gamesplanetde, gamesplanetuk, wingamestore, allyouplay, etialmarket, joybuggy }
 		public async Task<IActionResult> GetAllITADGames()
@@ -40,17 +67,17 @@ namespace BirdEyes.Server.Controllers
 			foreach (var shop in (Shop[])Enum.GetValues(typeof(Shop)))
 			{
 				RestRequest shopGameRequest = new RestRequest("plain/list/?key="+ITADKey+"&shop="+shop, Method.Get);
-				var shopGameResponse = restClient.ExecuteAsync(shopGameRequest).Result;
+				var shopGameResponse = restClient.ExecuteAsync(shopGameRequest).Result.Content;
 
 
 				List<string> shopGames = new List<string>();
 
 				//All games' titles
-				if (shopGameResponse.Content != null)
-					shopGames.AddRange(TrimGameResponse(shopGameResponse.Content, shop.ToString()));
+				if (shopGameResponse != null)
+					shopGames.AddRange(TrimGameResponse(shopGameResponse, shop.ToString()));
 				else
 				{
-					return BadRequest("shopGameResponse.Content is null");
+					return BadRequest("shopGameResponse is null");
 					throw new Exception();
 				}
 
@@ -58,12 +85,11 @@ namespace BirdEyes.Server.Controllers
 				foreach (var game in shopGames)
 				{
 					RestRequest shopPriceRequest = new RestRequest("prices/?key="+ITADKey+"&plains="+game+"&shops="+shop);
-					var shopPriceResponse = restClient.ExecuteAsync(shopPriceRequest).Result;
+					var shopPriceResponse = restClient.ExecuteAsync(shopPriceRequest).Result.Content;
 
 					//One game's price
-					double shopGamePrice = new double();
-					shopPriceResponse.Content.Remove(0, shopPriceResponse.Content.IndexOf("\"price_new\":")+12);
-					shopGamePrice = Double.Parse((string)shopPriceResponse.Content.TakeWhile(Char.IsDigit));
+					double shopGamePrice = trimPriceResponse(shopPriceResponse);
+
 
 					for (int i = 0; i < shopGames.Count; i++)
 						allITADGames.Add(new ITADGameModel(shopGames.ElementAt(i), shopGamePrice));
