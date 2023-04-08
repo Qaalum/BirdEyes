@@ -1,6 +1,8 @@
 ﻿using BirdEyes.Shared;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace BirdEyes.Server.Controllers
 {
@@ -37,22 +39,14 @@ namespace BirdEyes.Server.Controllers
 
 			return resultantStrings;
 		}
+
 		static double trimPriceResponse(string trimString)
 		{
-			if (trimString.Length == 0)
-			{
-				throw new ArgumentException("The priceResponse inludes no numbers 😐");
-			}
-
 			double resultantDouble = new double();
-			if (trimString.TakeWhile(Char.IsDigit).ToString().Length == 0)
+			var match = Regex.Match(trimString, @"\d+(\.\d+)?");
+			if (match.Success)
 			{
-				trimString.Remove(0, 1);
-				trimPriceResponse(trimString);
-			}
-			else
-			{
-				resultantDouble = Double.Parse(String.Join("", Convert.ToChar(trimString.TakeWhile(Char.IsDigit)))); //Don't ask
+				resultantDouble = double.Parse(match.Value, CultureInfo.InvariantCulture);
 			}
 			return resultantDouble;
 		}
@@ -78,7 +72,6 @@ namespace BirdEyes.Server.Controllers
 				else
 				{
 					return BadRequest("shopGameResponse is null");
-					throw new Exception();
 				}
 
 
