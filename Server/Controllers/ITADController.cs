@@ -15,39 +15,40 @@ namespace BirdEyes.Server.Controllers
 		RestClient restClient = new RestClient("https://api.isthereanydeal.com/v01/game/"); //No wrapper, using RestSharp 
 
 		//Deserializes the response's content into a list of strings 
-		public static List<string> TrimGameResponse(string trimString, string shop)
+		List<string> TrimGamesResponse(string inputString, string shop)
 		{
-			trimString.Trim("\"\\/:{}1234567890".ToCharArray()); //This is why names can have no numbers in them 
+			List<string> resultantSs = new List<string>();
+			string[] trimStrings = inputString.Split(',');
 
-			List<string> resultantStrings = new List<string>();
-			resultantStrings.AddRange(trimString.Split(','));
-
-			foreach (string str in resultantStrings)
+			string s;
+			foreach (string str in trimStrings)
 			{
-				if (str.Contains("data"))
-					str.Remove(0, 4+shop.Length);
-				else if (str.Length>2)
+				Regex rgx = new Regex("[^a-zA-Z]");
+				s = rgx.Replace(str, "");
+
+				if (s.Length > 2)
 				{
-					Console.WriteLine(str);
-					str.Remove(0, 3);
+					if (str.Contains("data"))
+						s = s.Remove(0, 4+shop.Length);
+					s = s.Remove(0, 3);
 				}
 				else
-				{
-					str.Remove(0, str.Length);
-				}
+					s.Remove(0, s.Length);
+				resultantSs.Add(s);
 			}
 
-			return resultantStrings;
+			return resultantSs;
 		}
 
-		static double trimPriceResponse(string trimString)
+		double trimPriceResponse(string trimString)
 		{
-			double resultantDouble = new double();
+			double resultantDouble;
 			var match = Regex.Match(trimString, @"\d+(\.\d+)?");
 			if (match.Success)
-			{
 				resultantDouble = double.Parse(match.Value, CultureInfo.InvariantCulture);
-			}
+			else
+				throw new Exception("There's no price in the priceResponse" + trimString);
+
 			return resultantDouble;
 		}
 
@@ -68,7 +69,7 @@ namespace BirdEyes.Server.Controllers
 
 				//All games' titles
 				if (shopGameResponse != null)
-					shopGames.AddRange(TrimGameResponse(shopGameResponse, shop.ToString()));
+					shopGames.AddRange(TrimGamesResponse(shopGameResponse, shop.ToString()));
 				else
 				{
 					return BadRequest("shopGameResponse is null");
@@ -80,12 +81,19 @@ namespace BirdEyes.Server.Controllers
 					RestRequest shopPriceRequest = new RestRequest("prices/?key="+ITADKey+"&plains="+game+"&shops="+shop);
 					var shopPriceResponse = restClient.ExecuteAsync(shopPriceRequest).Result.Content;
 
-					//One game's price
-					double shopGamePrice = trimPriceResponse(shopPriceResponse);
+					if (shopPriceResponse == "{\"error\":\"missing_params\",\"error_description\":\"Required parameter 'plains' is missing, refer to documentation\"}")
+					{
+						Console.WriteLine(game + " is not a plain ITAD recognizes!");
+					}
+					else
+					{
+						//One game's price
+						double shopGamePrice = trimPriceResponse(shopPriceResponse);
 
+						for (int i = 0; i < shopGames.Count; i++)
+							allITADGames.Add(new ITADGameModel(shopGames.ElementAt(i), shopGamePrice));
+					}
 
-					for (int i = 0; i < shopGames.Count; i++)
-						allITADGames.Add(new ITADGameModel(shopGames.ElementAt(i), shopGamePrice));
 				}
 			}
 
