@@ -10,15 +10,13 @@ namespace BirdEyes.Server.Controllers
 	[ApiController]
 	public class ITADController : Controller
 	{
-
 		private string ITADKey = "46594d518d6e4aedb823ecb4e6d00a54a10f1155";
-		RestClient restClient = new RestClient("https://api.isthereanydeal.com/v01/game/"); //No wrapper, using RestSharp 
+		RestClient restClient = new RestClient("https://api.isthereanydeal.com/v01/game/");
 
-		//Deserializes the response's content into a list of strings 
 		List<string> TrimGamesResponse(string inputString, string shop)
 		{
 			List<string> resultantSs = new List<string>();
-			string[] trimStrings = inputString.Split(',');
+			string[] trimStrings = inputString.Split(",");
 
 			string s;
 			foreach (string str in trimStrings)
@@ -28,12 +26,15 @@ namespace BirdEyes.Server.Controllers
 
 				if (s.Length > 2)
 				{
-					if (str.Contains("data"))
-						s = s.Remove(0, 4+shop.Length);
-					s = s.Remove(0, 3);
+					if (str == trimStrings.ElementAt(0))
+						s = s.Remove(0, 7+shop.Length);
+					else if (str.Contains("app\\/") || str.Contains("sub\\/"))
+						s = s.Remove(0, 3);
+					else if (str.Contains("bundle\\/"))
+						s = s.Remove(0, 6);
 				}
 				else
-					s.Remove(0, s.Length);
+					s = null;
 				resultantSs.Add(s);
 			}
 
@@ -47,7 +48,7 @@ namespace BirdEyes.Server.Controllers
 			if (match.Success)
 				resultantDouble = double.Parse(match.Value, CultureInfo.InvariantCulture);
 			else
-				throw new Exception("There's no price in the priceResponse" + trimString);
+				throw new Exception("There's no price in the priceResponse: " + trimString);
 
 			return resultantDouble;
 		}
@@ -57,47 +58,39 @@ namespace BirdEyes.Server.Controllers
 		public async Task<IActionResult> GetAllITADGames()
 		{
 			List<ITADGameModel> allITADGames = new List<ITADGameModel>();
+			List<string> shopGames = new List<string>();
 
 
 			foreach (var shop in (Shop[])Enum.GetValues(typeof(Shop)))
 			{
-				RestRequest shopGameRequest = new RestRequest("plain/list/?key="+ITADKey+"&shop="+shop, Method.Get);
-				var shopGameResponse = restClient.ExecuteAsync(shopGameRequest).Result.Content;
+				RestRequest shopGamesRequest = new RestRequest("plain/list/?key="+ITADKey+"&shops="+shop.ToString(), Method.Get);
+				var shopGamesResponse = restClient.ExecuteAsync(shopGamesRequest).Result.Content;
 
-
-				List<string> shopGames = new List<string>();
-
-				//All games' titles
-				if (shopGameResponse != null)
-					shopGames.AddRange(TrimGamesResponse(shopGameResponse, shop.ToString()));
+				if (shopGamesResponse != null || shopGamesResponse != "")
+					shopGames.AddRange(TrimGamesResponse(shopGamesResponse, shop.ToString()));
 				else
-				{
-					return BadRequest("shopGameResponse is null");
-				}
-
+					return BadRequest("shopGamesResponse is empty");
 
 				foreach (var game in shopGames)
 				{
-					RestRequest shopPriceRequest = new RestRequest("prices/?key="+ITADKey+"&plains="+game+"&shops="+shop);
+					RestRequest shopPriceRequest = new RestRequest("prices/?key="+ITADKey+"&plains="+game+"&shop="+shop);
 					var shopPriceResponse = restClient.ExecuteAsync(shopPriceRequest).Result.Content;
 
 					if (shopPriceResponse == "{\"error\":\"missing_params\",\"error_description\":\"Required parameter 'plains' is missing, refer to documentation\"}")
 					{
-						Console.WriteLine(game + " is not a plain ITAD recognizes!");
+						return BadRequest(game + " is not a plain ITAD recognizes!");
 					}
 					else
 					{
-						//One game's price
 						double shopGamePrice = trimPriceResponse(shopPriceResponse);
 
 						for (int i = 0; i < shopGames.Count; i++)
 							allITADGames.Add(new ITADGameModel(shopGames.ElementAt(i), shopGamePrice));
 					}
-
 				}
 			}
 
-
+			return BadRequest("Bad");
 			if (allITADGames.Count > 0)
 				return Ok(allITADGames);
 			else
