@@ -84,7 +84,6 @@ namespace BirdEyes.Server.Controllers
 				}
 			}
 
-			return BadRequest("Bad");
 			if (allITADGames.Count > 0)
 				return Ok(allITADGames);
 			else
