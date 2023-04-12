@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <None Include="Pages\Authentication.razor" />
-    <None Include="Pages\Counter.razor" />
     <None Include="Pages\Index.razor" />
   </ItemGroup>
 
@@ -24,6 +23,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shared\BirdEyes.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

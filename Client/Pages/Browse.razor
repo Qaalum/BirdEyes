@@ -1,10 +1,4 @@
 ﻿@page "/browse"
-@using BirdEyes.Client.Services.IGDBService;
-@inject IIGDBService IGDBService
-@using BirdEyes.Client.Services.SteamService;
-@inject ISteamService SteamService
-@using BirdEyes.Client.Services.GOGService;
-@inject IGOGService GOGService
 @using IGDB;
 @using IGDB.Models;
 
@@ -85,7 +79,7 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await IGDBService.GetAllGames();
+		/*await IGDBService.GetAllGames();*/
 		
 	}
 

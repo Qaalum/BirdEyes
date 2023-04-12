@@ -18,11 +18,12 @@ namespace BirdEyes.Server.Controllers
 			List<string> resultantSs = new List<string>();
 			string[] trimStrings = inputString.Split(",");
 
-			string s;
-			foreach (string str in trimStrings)
+			for (int i = 0; i<trimStrings.Count(); i++)
 			{
-				Regex rgx = new Regex("[^a-zA-Z]");
-				s = rgx.Replace(str, "");
+				string str = trimStrings[i];
+
+				char[] arr = str.Where(c => (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))).ToArray();
+				string s = new string(arr);
 
 				if (s.Length > 2)
 				{
@@ -30,7 +31,7 @@ namespace BirdEyes.Server.Controllers
 						s = s.Remove(0, 7+shop.Length);
 					else if (str.Contains("app\\/") || str.Contains("sub\\/"))
 						s = s.Remove(0, 3);
-					else if (str.Contains("bundle\\/"))
+					else
 						s = s.Remove(0, 6);
 				}
 				else
@@ -48,13 +49,14 @@ namespace BirdEyes.Server.Controllers
 			if (match.Success)
 				resultantDouble = double.Parse(match.Value, CultureInfo.InvariantCulture);
 			else
-				throw new Exception("There's no price in the priceResponse: " + trimString);
+				resultantDouble= double.NaN;
 
 			return resultantDouble;
 		}
 
 
-		enum Shop { steam, gog, greenmangaming, indiegamestand, amazonus, humblestore, nuuvem, getgames, desura, indiegalastore, gamefly, origin, epic, fanatical, shinyloot, voidu, itchio, gamersgate, noctre, gamebillet, gamesplanetus, gamesplanetde, gamesplanetuk, wingamestore, allyouplay, etialmarket, joybuggy }
+		//enum Shop { steam, gog, greenmangaming, indiegamestand, amazonus, humblestore, nuuvem, getgames, desura, indiegalastore, gamefly, origin, epic, fanatical, shinyloot, voidu, itchio, gamersgate, noctre, gamebillet, gamesplanetus, gamesplanetde, gamesplanetuk, wingamestore, allyouplay, etialmarket, joybuggy }
+		enum Shop { joybuggy }
 		public async Task<IActionResult> GetAllITADGames()
 		{
 			List<ITADGameModel> allITADGames = new List<ITADGameModel>();
@@ -66,27 +68,19 @@ namespace BirdEyes.Server.Controllers
 				RestRequest shopGamesRequest = new RestRequest("plain/list/?key="+ITADKey+"&shops="+shop.ToString(), Method.Get);
 				var shopGamesResponse = restClient.ExecuteAsync(shopGamesRequest).Result.Content;
 
-				if (shopGamesResponse != null || shopGamesResponse != "")
-					shopGames.AddRange(TrimGamesResponse(shopGamesResponse, shop.ToString()));
-				else
-					return BadRequest("shopGamesResponse is empty");
+				shopGames.AddRange(TrimGamesResponse(shopGamesResponse, shop.ToString()));
 
-				foreach (var game in shopGames)
+				for (int b = 0; b<shopGames.Count; b++)
 				{
+					string game = shopGames[b];
+
 					RestRequest shopPriceRequest = new RestRequest("prices/?key="+ITADKey+"&plains="+game+"&shop="+shop);
 					var shopPriceResponse = restClient.ExecuteAsync(shopPriceRequest).Result.Content;
 
-					if (shopPriceResponse == "{\"error\":\"missing_params\",\"error_description\":\"Required parameter 'plains' is missing, refer to documentation\"}")
-					{
-						return BadRequest(game + " is not a plain ITAD recognizes!");
-					}
-					else
-					{
-						double shopGamePrice = trimPriceResponse(shopPriceResponse);
+					double shopGamePrice = trimPriceResponse(shopPriceResponse);
 
-						for (int i = 0; i < shopGames.Count; i++)
-							allITADGames.Add(new ITADGameModel(shopGames.ElementAt(i), shopGamePrice));
-					}
+					for (int c = 0; c < shopGames.Count; c++)
+						allITADGames.Add(new ITADGameModel(shopGames.ElementAt(c), shopGamePrice));
 				}
 			}
 
