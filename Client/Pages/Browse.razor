@@ -1,4 +1,5 @@
 ﻿@page "/browse"
+@using BirdEyes.Client.Services.IGDBService;
 @using IGDB;
 @using IGDB.Models;
 
@@ -40,35 +41,19 @@
 		</tr>
 	</thead>
 	<tbody>
-		<!-- @foreach (Game game in IGDBService.AllGames)
-			if (GOGService.AllGames.Contains() | SteamService.AllGames.Contains())
-		{
 			<tr>
-					<td>game.Name</td> 
-					@if ( == 0)
-					{
+				<td>game.Name</td>
+
+				<td></td>
+				@if (/*game.Price == 0*/ 1==0)
+				{
 					<td style="00FF00">Free</td>
 				}
-				else {
+				else
+				{
 					<td>$Price</td>
-				} 
-
-				<td>OnSale</td>
-				
-				<td>Version</td>
-				
-				<td>Rating</td>
-				
-				<td>PubName</td> 
-				
-				<td>DevName</td> 
-				
-				<td>Downloads</td>
+				}
 			</tr>
-		}
-			else if ()
-			{
-		}-->
 		</tbody> 
 </table>
 
@@ -79,11 +64,14 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		/*await IGDBService.GetAllGames();*/
-		
+		await ITADService.GetAllGames();
 	}
 
+	/*for (int i = 0; i<ITADService.shopGamePairs.Count(); i++)
+	{
+	
+	}*/
 
-	//public void DropSortOptions()  {	}
+	public void DropSortOptions()  {	}
 }
 

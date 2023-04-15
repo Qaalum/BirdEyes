@@ -1,5 +1,4 @@
-﻿using BirdEyes.Shared;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -10,6 +9,7 @@ namespace BirdEyes.Server.Controllers
 	[ApiController]
 	public class ITADController : Controller
 	{
+		string[] shops = { "steam", "gog", "greenmangaming", "indiegamestand", "amazonus", "humblestore", "nuuvem", "getgames", "desura", "indiegalastore", "gamefly", "origin", "epic", "fanatical", "shinyloot", "voidu", "itchio", "gamersgate", "noctre", "gamebillet", "gamesplanetus", "gamesplanetde", "gamesplanetuk", "wingamestore", "allyouplay", "etailmarket", "joybuggy" };
 		private string ITADKey = "46594d518d6e4aedb823ecb4e6d00a54a10f1155";
 		RestClient restClient = new RestClient("https://api.isthereanydeal.com/v01/game/");
 
@@ -21,15 +21,13 @@ namespace BirdEyes.Server.Controllers
 			for (int i = 0; i<trimStrings.Count(); i++)
 			{
 				string str = trimStrings[i];
-
-				char[] arr = str.Where(c => (char.IsLetterOrDigit(c) || char.IsWhiteSpace(c))).ToArray();
-				string s = new string(arr);
+				string s = new string(str.Where(c => char.IsLetterOrDigit(c)).ToArray());
 
 				if (s.Length > 2)
 				{
-					if (str == trimStrings.ElementAt(0))
+					if (str == trimStrings[0])
 						s = s.Remove(0, 7+shop.Length);
-					else if (str.Contains("app\\/") || str.Contains("sub\\/"))
+					else if (str.Contains("app\\") || str.Contains("sub\\"))
 						s = s.Remove(0, 3);
 					else
 						s = s.Remove(0, 6);
@@ -38,7 +36,6 @@ namespace BirdEyes.Server.Controllers
 					s = null;
 				resultantSs.Add(s);
 			}
-
 			return resultantSs;
 		}
 
@@ -49,26 +46,25 @@ namespace BirdEyes.Server.Controllers
 			if (match.Success)
 				resultantDouble = double.Parse(match.Value, CultureInfo.InvariantCulture);
 			else
-				resultantDouble= double.NaN;
+				resultantDouble = 0;
 
 			return resultantDouble;
 		}
 
 
-		//enum Shop { steam, gog, greenmangaming, indiegamestand, amazonus, humblestore, nuuvem, getgames, desura, indiegalastore, gamefly, origin, epic, fanatical, shinyloot, voidu, itchio, gamersgate, noctre, gamebillet, gamesplanetus, gamesplanetde, gamesplanetuk, wingamestore, allyouplay, etialmarket, joybuggy }
-		enum Shop { joybuggy }
 		public async Task<IActionResult> GetAllITADGames()
 		{
-			List<ITADGameModel> allITADGames = new List<ITADGameModel>();
+			string allITADGames = String.Empty;
 			List<string> shopGames = new List<string>();
 
 
-			foreach (var shop in (Shop[])Enum.GetValues(typeof(Shop)))
+			for (int i = 0; i < shops.Count(); i++)
 			{
-				RestRequest shopGamesRequest = new RestRequest("plain/list/?key="+ITADKey+"&shops="+shop.ToString(), Method.Get);
+				string shop = shops[i];
+				RestRequest shopGamesRequest = new RestRequest("plain/list/?key="+ITADKey+"&shops="+shop, Method.Get);
 				var shopGamesResponse = restClient.ExecuteAsync(shopGamesRequest).Result.Content;
 
-				shopGames.AddRange(TrimGamesResponse(shopGamesResponse, shop.ToString()));
+				shopGames.AddRange(TrimGamesResponse(shopGamesResponse, shop));
 
 				for (int b = 0; b<shopGames.Count; b++)
 				{
@@ -79,15 +75,11 @@ namespace BirdEyes.Server.Controllers
 
 					double shopGamePrice = trimPriceResponse(shopPriceResponse);
 
-					for (int c = 0; c < shopGames.Count; c++)
-						allITADGames.Add(new ITADGameModel(shopGames.ElementAt(c), shopGamePrice));
+					allITADGames = String.Join(allITADGames, "|"+shop+","+game+":"+shopGamePrice+","); //Easily fixed
 				}
 			}
 
-			if (allITADGames.Count > 0)
-				return Ok(allITADGames);
-			else
-				return BadRequest("No games were found 🤔");
+			return Ok(allITADGames);
 		}
 	}
 }
