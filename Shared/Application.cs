@@ -1,11 +1,10 @@
-﻿using System.Text.Json.Serialization;
-
-namespace BirdEyes.Shared //WHOLE THINK IS PROBABLY UNNECESSARY, KEEPING JUST IN CASE 
+﻿namespace BirdEyes.Shared //WHOLE THINK IS PROBABLY UNNECESSARY, KEEPING JUST IN CASE 
 {
 	public class Application //Add in-app purchases var 
 	{
 		public int Id { get; set; }
 		public string Title { get; set; }
+		public string Shop { get; set; }
 		public double Price { get; set; }
 		public bool OnSale { get; set; }
 		public double? Version { get; set; }
@@ -15,17 +14,18 @@ namespace BirdEyes.Shared //WHOLE THINK IS PROBABLY UNNECESSARY, KEEPING JUST IN
 		public int Downloads { get; set; }
 
 
-		[JsonConstructor]
-		public Application(string title, double price)
+		public Application(string title, string shop, double price)
 		{
 			Title = title;
+			Shop = shop;
 			Price = price;
 		}
 
-		public Application(int id, string title, double price, bool onSale, double? version, int? rating, string pubName, string devName, int downloads)
+		public Application(int id, string title, string shop, double price, bool onSale, double? version, int? rating, string pubName, string devName, int downloads)
 		{
 			Id = id;
 			Title = title;
+			Shop = shop;
 			Price = price;
 			OnSale = onSale;
 			Version = version;

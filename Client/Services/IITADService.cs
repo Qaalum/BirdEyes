@@ -2,8 +2,6 @@
 {
 	public interface IITADService
 	{
-		Dictionary<string, List<Application>> allShopGames { get; set; }
-
 		Task GetAllGames();
 	}
 }

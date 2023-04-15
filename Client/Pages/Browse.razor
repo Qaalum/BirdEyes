@@ -22,13 +22,8 @@
 	<thead>
 		<tr>
 			<th>Title</th>
+			<th>Shop</th>
 			<th>Price</th>
-			<th>On Sale?</th>
-			<th>Version</th>
-			<th>Rating</th>
-			<th>Publisher</th>
-			<th>Developer</th>
-			<th>Download Count</th>
 			<th class="dropdown"><button class="dropdown">
 				<span class="oi oi-list" area-hidden="true"/>
 				<div class="dropdown-content">
@@ -64,7 +59,9 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		await ITADService.GetAllGames();
+		ITADService service = new ITADService();
+
+		await service.GetAllGames();
 	}
 
 	/*for (int i = 0; i<ITADService.shopGamePairs.Count(); i++)
