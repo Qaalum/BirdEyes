@@ -1,4 +1,4 @@
-﻿namespace BirdEyes.Client.Services.IGDBService
+﻿namespace BirdEyes.Client.Services.ITADService
 {
 	public class ITADService : IITADService
 	{
@@ -14,24 +14,33 @@
 
 				for (int b = 1; b < gameSplitStrings.Count()-1; b++)
 				{
-					allGames.Add(new Application(gameSplitStrings[b].TakeWhile(c => !Char.IsLetterOrDigit(c)).ToArray().ToString(), gameSplitStrings[0], Double.Parse(gameSplitStrings[b].Remove(0, gameSplitStrings[b].IndexOf(":")))));
+					double price = 0;
+					if (Char.IsDigit(gameSplitStrings[b][gameSplitStrings[b].IndexOf(":")+1]))
+					{
+						price = Double.Parse(gameSplitStrings[b].Remove(0, gameSplitStrings[b].IndexOf(":")));
+						allGames.Add(new Application(gameSplitStrings[b].TakeWhile(c => !Char.IsLetterOrDigit(c)).ToArray().ToString(), gameSplitStrings[0], price));
+					}
+					else
+					{
+						allGames.Add(new Application(gameSplitStrings[b].TakeWhile(c => !Char.IsLetterOrDigit(c)).ToArray().ToString(), gameSplitStrings[0], price));
+					}
 				}
 			}
 
 			return allGames;
 		}
 
-		private readonly HttpClient _http;
+		private readonly HttpClient _http = new();
 
-		public ITADService()
+		public ITADService(HttpClient http)
 		{
-			_http = new();
+			_http = http;
 		}
 
-
-		public async Task GetAllGames()
+		public async Task<List<Application>> GetAllGames()
 		{
-			var result = InterpretStringResponse((await _http.GetAsync("api/itad")).ToString());
+			var result = InterpretStringResponse((await _http.GetAsync("https://localhost:7196/api/itad")).ToString());
+			return result;
 		}
 	}
 }

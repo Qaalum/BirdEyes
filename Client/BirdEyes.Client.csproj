@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -12,13 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="IGDB" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.2" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-    <PackageReference Include="NicoVIII.GogApi" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>

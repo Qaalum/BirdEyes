@@ -1,7 +1,5 @@
 ﻿@page "/browse"
-@using BirdEyes.Client.Services.IGDBService;
-@using IGDB;
-@using IGDB.Models;
+@using BirdEyes.Client.Services.ITADService;
 
 <PageTitle> Browse Games! </PageTitle>
 
@@ -37,17 +35,23 @@
 	</thead>
 	<tbody>
 			<tr>
-				<td>game.Name</td>
+			@for (int i = 0; i<allGames.Count(); i++) 
+			{
+				var game = allGames[i];
+				<td>@game.Title</td>
 
-				<td></td>
-				@if (/*game.Price == 0*/ 1==0)
+				<td>@game.Shop</td>
+
+				@if (game.Price == 0 | game.Price == null)
 				{
 					<td style="00FF00">Free</td>
 				}
 				else
 				{
-					<td>$Price</td>
+					<td>game.Price</td>
 				}
+			}
+
 			</tr>
 		</tbody> 
 </table>
@@ -55,14 +59,14 @@
 
 
 @code {
-	private Input BrowseInput = new Input(); 
+	private Input BrowseInput = new Input();
+	List<Application> allGames = new();
 
 	protected override async Task OnInitializedAsync()
 	{
-		ITADService service = new ITADService();
-
-		await service.GetAllGames();
-	}
+		ITADService serviceInstance = new(new HttpClient());
+		allGames.AddRange(await serviceInstance.GetAllGames());
+    }
 
 	/*for (int i = 0; i<ITADService.shopGamePairs.Count(); i++)
 	{
