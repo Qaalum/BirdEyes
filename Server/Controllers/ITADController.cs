@@ -71,7 +71,7 @@ namespace BirdEyes.Server.Controllers
                 var shopGamesResponse = restClient.ExecuteAsync(shopGamesRequest).Result.Content;
 
                 if (shopGamesResponse == null)
-                    return BadRequest("No shop games (╯°□°）╯︵ ┻━┻");
+                    return BadRequest("No shop games (╯°□°）╯︵ ┻━┻ [Check Github issue board]");
 
                 shopGames.AddRange(TrimGamesResponse(shopGamesResponse, shop));
 
