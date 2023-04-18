@@ -3,34 +3,20 @@
 
 <PageTitle> Browse Games! </PageTitle>
 
-<strong><h3>Browse Games</h3></strong>
-<p/><p/>
-<AuthorizeView>
-	<NotAuthorized>
-		<p>Log in to track games! </p>
-	</NotAuthorized>
-</AuthorizeView>
+<strong><h1>Browse Games</h1></strong>
+<br />
 <EditForm Model="@BrowseInput">
 	<div>
 		<InputText id="Searchbar" @bind-Value="@BrowseInput.InputtedText" class="form-control" />
 	</div>
 </EditForm>
 
-<table class="table"> 
+<table class="table" style="font-size:130%">
 	<thead>
 		<tr>
 			<th>Title</th>
 			<th>Shop</th>
 			<th>Price</th>
-			<th class="dropdown"><button class="dropdown">
-				<span class="oi oi-list" area-hidden="true"/>
-				<div class="dropdown-content">
-						<a href="/browse&sort=Title"<!--add this stuff-->>Title</a>
-						<a href="#">Link 2</a>
-						<a href="#">Link 3</a>
-				</div>
-
-			</button></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -38,9 +24,9 @@
 			@for (int i = 0; i<allGames.Count(); i++) 
 			{
 				var game = allGames[i];
-				<td><span href="https://isthereanydeal.com/">@game.Title</span></td>
+				<td><a href='@string.Format("https://isthereanydeal.com/#/page:game/info?plain={0}", game.Title.ToLower())'>@game.Title.ToUpper()</a></td>
 
-				<td>@game.Shop</td>
+				<td>@game.Shop.ToUpper()</td>
 
 				@if (game.Price == 0 | game.Price == null)
 				{
@@ -48,31 +34,24 @@
 				}
 				else
 				{
-					<td>game.Price</td>
+					<td>$@game.Price</td>
 				}
+
+				<td><a class ="oi oi-star" href='@string.Format("https://isthereanydeal.com/game/{0}/info/#/page:game/wait?plain={0}", game.Title.ToLower())' /></td>
 			}
 
 			</tr>
 		</tbody> 
 </table>
 
-
-
 @code {
 	private Input BrowseInput = new Input();
 
-	List<Application> allGames = new();
+	List<Game> allGames = new();
 	protected override async Task OnInitializedAsync()
 	{
 		ITADService serviceInstance = new(new HttpClient());
 		allGames.AddRange(await serviceInstance.GetAllGames());
     }
-
-	/*for (int i = 0; i<ITADService.shopGamePairs.Count(); i++)
-	{
-	
-	}*/
-
-	public void DropSortOptions()  {	}
 }
 

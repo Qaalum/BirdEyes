@@ -1,6 +1,6 @@
 ﻿namespace BirdEyes.Shared //WHOLE THINK IS PROBABLY UNNECESSARY, KEEPING JUST IN CASE 
 {
-	public class Application //Add in-app purchases var 
+	public class Game //Add in-app purchases var 
 	{
 		public int Id { get; set; }
 		public string Title { get; set; }
@@ -14,14 +14,14 @@
 		public int Downloads { get; set; }
 
 
-		public Application(string title, string shop, double price)
+		public Game(string title, string shop, double price)
 		{
 			Title = title;
 			Shop = shop;
 			Price = price;
 		}
 
-		public Application(int id, string title, string shop, double price, bool onSale, double? version, int? rating, string pubName, string devName, int downloads)
+		public Game(int id, string title, string shop, double price, bool onSale, double? version, int? rating, string pubName, string devName, int downloads)
 		{
 			Id = id;
 			Title = title;
