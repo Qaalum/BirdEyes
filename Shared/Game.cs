@@ -1,4 +1,4 @@
-﻿namespace BirdEyes.Shared //WHOLE THINK IS PROBABLY UNNECESSARY, KEEPING JUST IN CASE 
+﻿namespace BirdEyes.Shared
 {
 	public class Game //Add in-app purchases var 
 	{

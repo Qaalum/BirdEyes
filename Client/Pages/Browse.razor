@@ -20,10 +20,10 @@
 		</tr>
 	</thead>
 	<tbody>
+			@for (int i = 0; i<allGames.Count(); i++)
+		{
+			var game = allGames[i];
 			<tr>
-			@for (int i = 0; i<allGames.Count(); i++) 
-			{
-				var game = allGames[i];
 				<td><a href='@string.Format("https://isthereanydeal.com/#/page:game/info?plain={0}", game.Title.ToLower())'>@game.Title.ToUpper()</a></td>
 
 				<td>@game.Shop.ToUpper()</td>
@@ -37,10 +37,10 @@
 					<td>$@game.Price</td>
 				}
 
-				<td><a class ="oi oi-star" href='@string.Format("https://isthereanydeal.com/game/{0}/info/#/page:game/wait?plain={0}", game.Title.ToLower())' /></td>
+				<td><a class="oi oi-star" href='@string.Format("https://isthereanydeal.com/game/{0}/info/#/page:game/wait?plain={0}", game.Title.ToLower())' /></td>
+			</tr>
 			}
 
-			</tr>
 		</tbody> 
 </table>
 
